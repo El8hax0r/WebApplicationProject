@@ -22,7 +22,13 @@ namespace WebApplication1.Controllers
         // GET: UserClasses
         public async Task<IActionResult> Index()
         {
-            var webApplication1Context = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation);
+            var currentUser = this.User.Identity.Name; //this is current user Email
+            var currentId = _context.UserClass.Include(u => u.Id); //this is user GUID
+            var email = _context.AspNetUsers.Include(u => u.Email); //each records' email property
+            var webApplication1Context = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation)
+                .Where(i => i.IdNavigation.Email == currentUser);
+                //.Where(currentUser == email);
+                //.Where(_context.AspNetUsers.);
             return View(await webApplication1Context.ToListAsync());
         }
 
