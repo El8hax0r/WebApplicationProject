@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +9,6 @@ using WebApplication1;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize]
     public class UserClassesController : Controller
     {
         private readonly WebApplication1Context _context;
@@ -50,8 +48,8 @@ namespace WebApplication1.Controllers
         // GET: UserClasses/Create
         public IActionResult Create()
         {
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName");
-            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "UserId");
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassDescription");
+            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return View();
         }
 
