@@ -22,10 +22,11 @@ namespace WebApplication1.Controllers
         // GET: UserClasses
         public async Task<IActionResult> Index()
         {
-            var currentUser = this.User.Identity.Name; //this is current user Email
-            var currentId = _context.UserClass.Include(u => u.Id); //this is user GUID
+            var currentUser = HttpContext.User.Identity.Name; //this is current user Email
+            var currentId = _context.AspNetUsers.Include(u => u.Email).Include(u => u.Id)
+                .Where(u => u.Email == currentUser); //this is user GUID
             var webApplication1Context = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation)
-                .Where(i => i.IdNavigation.Email == currentUser);
+                .Where(u => u.IdNavigation.Email == currentUser);
             return View(await webApplication1Context.ToListAsync());
         }
 
@@ -52,8 +53,11 @@ namespace WebApplication1.Controllers
         // GET: UserClasses/Create
         public IActionResult Create()
         {
+            var currentUser = HttpContext.User.Identity.Name; //this is current user Email
+            var currentId = _context.AspNetUsers.Include(u => u.Email).Include(u => u.Id)
+                .Where(u => u.Email == currentUser); //this is user GUID
             ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName");
-            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id");
+            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Email");
             return View();
         }
 
