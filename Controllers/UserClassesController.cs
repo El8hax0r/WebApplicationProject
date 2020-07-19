@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -62,14 +63,15 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
+                _context.Add(userClass);
                 try
                 {
-                    _context.Add(userClass);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
                 }
-                catch { } //here put an error message saying that user is already registered for that class
-                
+                catch {System.Diagnostics.Debug.WriteLine("Error with double-registering UserClass"); } //here put an error message saying that user is already registered for that class
+
+                return RedirectToAction(nameof(Index));
+
             }
             ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId);
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
