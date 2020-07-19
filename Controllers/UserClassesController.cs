@@ -48,7 +48,7 @@ namespace WebApplication1.Controllers
         // GET: UserClasses/Create
         public IActionResult Create()
         {
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassDescription");
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName");
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return View();
         }
@@ -62,11 +62,16 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(userClass);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(userClass);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch { } //here put an error message saying that user is already registered for that class
+                
             }
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassDescription", userClass.ClassId);
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId);
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
             return View(userClass);
         }
@@ -84,7 +89,7 @@ namespace WebApplication1.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassDescription", userClass.ClassId);
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId);
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
             return View(userClass);
         }
@@ -121,7 +126,7 @@ namespace WebApplication1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassDescription", userClass.ClassId);
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId);
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
             return View(userClass);
         }
