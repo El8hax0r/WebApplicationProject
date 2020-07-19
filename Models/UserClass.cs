@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1
 {
-    [Authorize]
     public partial class UserClass
     {
         public int ClassId { get; set; }

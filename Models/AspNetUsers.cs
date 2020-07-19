@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace WebApplication1
 {
-    [Authorize]
     public partial class AspNetUsers
     {
         public AspNetUsers()

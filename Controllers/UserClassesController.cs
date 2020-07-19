@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using WebApplication1;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize]
     public class UserClassesController : Controller
     {
         private readonly WebApplication1Context _context;
@@ -26,7 +29,7 @@ namespace WebApplication1.Controllers
             var currentId = _context.AspNetUsers.Include(u => u.Email).Include(u => u.Id)
                 .Where(u => u.Email == currentUser); //this is user GUID
             var webApplication1Context = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation)
-                .Where(u => u.IdNavigation.Email == currentUser);
+                .Where(u => u.IdNavigation.Email == currentUser); // //taking this out for testing issue //no issue
             return View(await webApplication1Context.ToListAsync());
         }
 
@@ -54,10 +57,11 @@ namespace WebApplication1.Controllers
         public IActionResult Create()
         {
             var currentUser = HttpContext.User.Identity.Name; //this is current user Email
-            var currentId = _context.AspNetUsers.Include(u => u.Email).Include(u => u.Id)
-                .Where(u => u.Email == currentUser); //this is user GUID
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName");
-            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Email");
+            // var currentId = this.User.Identity.Va
+            var nameQuery = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation)
+                .Where(u => u.IdNavigation.Email == currentUser); 
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName"); //can change this back to ClassName?
+            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return View();
         }
 
@@ -71,16 +75,16 @@ namespace WebApplication1.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(userClass);
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch {System.Diagnostics.Debug.WriteLine("Error with double-registering UserClass"); } //here put an error message saying that user is already registered for that class
+                //try
+                //{
+                await _context.SaveChangesAsync();
+                //}
+                //catch {System.Diagnostics.Debug.WriteLine("Error with double-registering UserClass"); } //here put an error message saying that user is already registered for that class
 
                 return RedirectToAction(nameof(Index));
 
             }
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId);
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId); //change this back later?
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
             return View(userClass);
         }
@@ -98,7 +102,7 @@ namespace WebApplication1.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId);
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId); //change....
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
             return View(userClass);
         }
