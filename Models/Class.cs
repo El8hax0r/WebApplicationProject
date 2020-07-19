@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
 
 namespace WebApplication1
 {
+    [Authorize]
     public partial class Class
     {
         public int ClassId { get; set; }
