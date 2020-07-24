@@ -57,11 +57,10 @@ namespace WebApplication1.Controllers
         public IActionResult Create()
         {
             var currentUser = HttpContext.User.Identity.Name; //this is current user Email
-            // var currentId = this.User.Identity.Va
             var nameQuery = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation)
                 .Where(u => u.IdNavigation.Email == currentUser); 
             ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName"); //can change this back to ClassName?
-            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id");
+            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "UserName");
             return View();
         }
 
@@ -86,6 +85,7 @@ namespace WebApplication1.Controllers
             }
             ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId); //change this back later?
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
+            ViewData["UserName"] = new SelectList(_context.AspNetUsers, "UserName", "UserName", userClass.IdNavigation.UserName);
             return View(userClass);
         }
 
