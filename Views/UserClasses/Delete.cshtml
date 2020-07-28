@@ -15,14 +15,14 @@
             @Html.DisplayNameFor(model => model.Class)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Class.ClassDescription)
+            @Html.DisplayFor(model => model.Class.ClassName)
         </dd class>
-        <dt class = "col-sm-2">
+        @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IdNavigation)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.IdNavigation.Id)
-        </dd class>
+        </dd class>*@
     </dl>
     
     <form asp-action="Delete">
