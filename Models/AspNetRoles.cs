@@ -8,7 +8,7 @@ namespace WebApplication1
         public AspNetRoles()
         {
             AspNetRoleClaims = new HashSet<AspNetRoleClaims>();
-            AspNetUserRoles = new HashSet<AspNetUserRoles>();
+            // scaffolding got rid of "AspNetUserRoles"
         }
 
         public string Id { get; set; }
@@ -17,6 +17,5 @@ namespace WebApplication1
         public string ConcurrencyStamp { get; set; }
 
         public virtual ICollection<AspNetRoleClaims> AspNetRoleClaims { get; set; }
-        public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
     }
 }

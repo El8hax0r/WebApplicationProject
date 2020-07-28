@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -31,7 +30,7 @@ namespace WebApplication1
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-EA37J2K;Database=WebApplication1;Trusted_Connection=True;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-EA37J2K;Database=WebApplication1;Trusted_Connection=True");
             }
         }
 
@@ -94,10 +93,6 @@ namespace WebApplication1
 
                 entity.HasIndex(e => e.RoleId);
 
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.AspNetUserRoles)
-                    .HasForeignKey(d => d.RoleId);
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.AspNetUserRoles)
                     .HasForeignKey(d => d.UserId);
@@ -137,6 +132,8 @@ namespace WebApplication1
 
             modelBuilder.Entity<Class>(entity =>
             {
+                entity.Property(e => e.ClassId).ValueGeneratedNever();
+
                 entity.Property(e => e.ClassDescription)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -152,18 +149,15 @@ namespace WebApplication1
 
             modelBuilder.Entity<UserClass>(entity =>
             {
-                entity.HasKey(e => e.ClassId)
-                    .HasName("PK_UserClass_1");
-
-                entity.Property(e => e.ClassId).ValueGeneratedNever();
+                entity.HasKey(e => e.UserClassId);
 
                 entity.Property(e => e.Id)
                     .IsRequired()
                     .HasMaxLength(450);
 
                 entity.HasOne(d => d.Class)
-                    .WithOne(p => p.UserClass)
-                    .HasForeignKey<UserClass>(d => d.ClassId)
+                    .WithMany(p => p.UserClass)
+                    .HasForeignKey(d => d.ClassId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserClass_Class");
 

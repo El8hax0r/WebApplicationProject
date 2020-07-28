@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\UserClassesControllerOLD.cs" />
     <Compile Remove="Data\Migrations\20200718053500_InitialCreate.cs" />
     <Compile Remove="Data\Migrations\20200718053500_InitialCreate.Designer.cs" />
   </ItemGroup>

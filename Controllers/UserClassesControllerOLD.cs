@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using WebApplication1;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Controllers
 {
@@ -23,7 +25,11 @@ namespace WebApplication1.Controllers
         // GET: UserClasses
         public async Task<IActionResult> Index()
         {
-            //var webApplication1Context = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation);
+            var currentUser = HttpContext.User.Identity.Name; //this is current user Email
+            //var currentId = _context.AspNetUsers.Include(u => u.Email).Include(u => u.Id)
+                //.Where(u => u.Email == currentUser); //this is user GUID
+            //var webApplication1Context = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation)
+                //.Where(u => u.IdNavigation.Email == currentUser); // //taking this out for testing issue //no issue
             var nameQuery = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation)
                 .Where(u => u.IdNavigation.UserName == User.Identity.Name);
             return View(await nameQuery.ToListAsync());
@@ -40,7 +46,7 @@ namespace WebApplication1.Controllers
             var userClass = await _context.UserClass
                 .Include(u => u.Class)
                 .Include(u => u.IdNavigation)
-                .FirstOrDefaultAsync(m => m.UserClassId == id);
+                .FirstOrDefaultAsync(m => m.ClassId == id);
             if (userClass == null)
             {
                 return NotFound();
@@ -52,8 +58,11 @@ namespace WebApplication1.Controllers
         // GET: UserClasses/Create
         public IActionResult Create()
         {
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName");
-            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id");
+            var currentUser = HttpContext.User.Identity.Name; //this is current user Email
+            //var nameQuery = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation.UserName)
+                //.Where(u => u.IdNavigation.UserName == User.Identity.Name); 
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName"); 
+            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id"); //UserName
             return View();
         }
 
@@ -62,7 +71,7 @@ namespace WebApplication1.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserClassId,ClassId,Id")] UserClass userClass)
+        public async Task<IActionResult> Create([Bind("ClassId,Id")] UserClass userClass)
         {
             if (ModelState.IsValid)
             {
@@ -70,8 +79,9 @@ namespace WebApplication1.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId);
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId); //change this back later?
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
+            ViewData["UserName"] = new SelectList(_context.AspNetUsers, "UserName", "UserName", userClass.IdNavigation.UserName);
             return View(userClass);
         }
 
@@ -88,7 +98,7 @@ namespace WebApplication1.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassDescription", userClass.ClassId);
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId); //change....
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
             return View(userClass);
         }
@@ -98,9 +108,9 @@ namespace WebApplication1.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserClassId,ClassId,Id")] UserClass userClass)
+        public async Task<IActionResult> Edit(int id, [Bind("ClassId,Id")] UserClass userClass)
         {
-            if (id != userClass.UserClassId)
+            if (id != userClass.ClassId)
             {
                 return NotFound();
             }
@@ -114,7 +124,7 @@ namespace WebApplication1.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserClassExists(userClass.UserClassId))
+                    if (!UserClassExists(userClass.ClassId))
                     {
                         return NotFound();
                     }
@@ -125,7 +135,7 @@ namespace WebApplication1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassDescription", userClass.ClassId);
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId);
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
             return View(userClass);
         }
@@ -141,7 +151,7 @@ namespace WebApplication1.Controllers
             var userClass = await _context.UserClass
                 .Include(u => u.Class)
                 .Include(u => u.IdNavigation)
-                .FirstOrDefaultAsync(m => m.UserClassId == id);
+                .FirstOrDefaultAsync(m => m.ClassId == id);
             if (userClass == null)
             {
                 return NotFound();
@@ -163,7 +173,7 @@ namespace WebApplication1.Controllers
 
         private bool UserClassExists(int id)
         {
-            return _context.UserClass.Any(e => e.UserClassId == id);
+            return _context.UserClass.Any(e => e.ClassId == id);
         }
     }
 }

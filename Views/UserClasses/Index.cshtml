@@ -4,20 +4,20 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Sign up for classes</h1>
+<h1>Registration</h1>
 
 <p>
-    <a asp-action="Create">Sign up here!</a>
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                <h6>Class</h6>
+                @Html.DisplayNameFor(model => model.Class)
             </th>
-            <th>
-                <h6>User</h6>
-            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.IdNavigation)
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -28,12 +28,12 @@
                 @Html.DisplayFor(modelItem => item.Class.ClassName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdNavigation.Email)
+                @Html.DisplayFor(modelItem => item.IdNavigation.Id)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ClassId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ClassId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ClassId">Delete</a>
+                @*<a asp-action="Edit" asp-route-id="@item.UserClassId">Edit</a> |*@
+                <a asp-action="Details" asp-route-id="@item.UserClassId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.UserClassId">Delete</a>
             </td>
         </tr>
 }
