@@ -23,9 +23,10 @@ namespace WebApplication1.Controllers
         // GET: UserClasses
         public async Task<IActionResult> Index()
         {
+            var name = HttpContext.User.Identity.Name;
             //var webApplication1Context = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation);
             var nameQuery = _context.UserClass.Include(u => u.Class).Include(u => u.IdNavigation)
-                .Where(u => u.IdNavigation.UserName == User.Identity.Name);
+                .Where(u => u.IdNavigation.Email == name);
             return View(await nameQuery.ToListAsync());
         }
 
@@ -53,7 +54,7 @@ namespace WebApplication1.Controllers
         public IActionResult Create()
         {
             ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName");
-            ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id");
+            ViewData["Id"] = new SelectList(_context.AspNetUsers.Where(u => u.UserName == HttpContext.User.Identity.Name), "Id", "Id");
             return View();
         }
 
@@ -70,7 +71,7 @@ namespace WebApplication1.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", userClass.ClassId);
+            ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassId", userClass.ClassId);
             ViewData["Id"] = new SelectList(_context.AspNetUsers, "Id", "Id", userClass.Id);
             return View(userClass);
         }
