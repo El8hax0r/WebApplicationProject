@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\AspNetUsers_OLD\**" />
+    <Content Remove="Views\AspNetUsers_OLD\**" />
+    <EmbeddedResource Remove="Views\AspNetUsers_OLD\**" />
+    <None Remove="Views\AspNetUsers_OLD\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\AspNetUsersController_OLD.cs" />
     <Compile Remove="Controllers\UserClassesControllerOLD.cs" />
     <Compile Remove="Data\Migrations\20200718053500_InitialCreate.cs" />
     <Compile Remove="Data\Migrations\20200718053500_InitialCreate.Designer.cs" />

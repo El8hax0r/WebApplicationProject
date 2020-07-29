@@ -30,6 +30,7 @@ namespace WebApplication1
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         public bool? IsAdmin { get; set; }
+        public DateTime? TransactionDate { get; set; }
 
         public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
