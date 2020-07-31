@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1;
 
+//POST to add a user : 
+//PUT{ guid }to update a user : 
+//GET to get all users : https://localhost:44317/api/usersapi/
+//GET { guid } to get a single user : https://localhost:44317/api/usersapi/1ee5ff7d-0a49-434a-8a67-b19dcd6d8aa4
+//DELETE { guid } to delete a single user : https://localhost:44317/api/usersapi/1ee5ff7d-0a49-434a-8a67-b19dcd6d8aa4
+
 namespace WebApplication1.Controllers
 {
     [Route("api/[controller]")]
